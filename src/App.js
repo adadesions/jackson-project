@@ -4,6 +4,10 @@ import idGenerator from 'incremental-id-generator';
 import triangulate from "delaunay-triangulate";
 import './App.css';
 
+// Components
+import Navbar from './components/Navbar';
+import Sidebar from './components/Sidebar';
+
 const { dialog } = window.require('electron').remote;
 const fs = window.require('fs');
 const YAML = require('json2yaml');
@@ -179,66 +183,24 @@ class App extends Component {
 
   render() {
     console.log(this.state.pointStore);
+    let statusObj = {
+      filename: this.state.filename,
+      extension: this.state.extension,
+      numPoints: this.state.pointStore.length,
+    };
     return (
       <div className="window">
         <div className="window-content">
           <div className="pane-group">
-            <div className="pane-sm sidebar">
-              <nav className="nav-group">
-                <h5 className="nav-group-title">Status</h5>
-                <div className="nav-group-item">
-                  <span className="icon icon-cd"></span>
-                  <span>Points : </span>
-                  {this.state.pointStore.length}
-                </div>
-                <div className="nav-group-item">
-                  <span className="icon icon-picture"></span>
-                  <span>Filename : </span>
-                  { this.state.filename}
-                </div>
-                <div className="nav-group-item">
-                  <span className="icon icon-newspaper"></span>
-                  <span>Extension : </span>
-                  { this.state.extension}
-                </div>
-              </nav>
-            </div>
+            <Sidebar statusObj={ statusObj } />
             <div className="pane">
 
-            <header className="toolbar toolbar-header">
-              <div className="toolbar-actions">
-                <div className="btn-group">
-                  <button className="btn btn-default">
-                    <span className="icon icon-home"></span>
-                  </button>
-                  <button className="btn btn-default" onClick={() => this.openFile()}>
-                    <span className="icon icon-folder"></span>
-                  </button>
-                  <button className="btn btn-default">
-                    <span className="icon icon-cloud"></span>
-                  </button>
-                  <button className="btn btn-default">
-                    <span className="icon icon-popup"></span>
-                  </button>
-                  <button className="btn btn-default">
-                    <span className="icon icon-shuffle"></span>
-                  </button>
-                </div>
-              </div>
-            </header>
+            <Navbar />
 
             <div id="face-canvas">
               <div id="circle-store">
                 { this._renderCircle() }
               </div>
-              <img
-                className="img-section"
-                src={'file://'+this.state.currentImg}
-                draggable='true'
-                onClick={ (e) => this.createCircle(e) }
-                alt='Faces'
-              />
-
               <img
                 className="img-section"
                 src={'file://'+this.state.currentImg}
