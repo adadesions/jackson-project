@@ -1,0 +1,32 @@
+{
+  "name": "jackson-project",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "delaunay-triangulate": "^1.1.6",
+    "electron-json-storage": "^3.0.5",
+    "electron-save-file": "^1.0.2",
+    "incremental-id-generator": "^0.1.0",
+    "jquery": "^3.2.1",
+    "json-stable-stringify": "^1.0.1",
+    "json2yaml": "^1.1.0",
+    "mouse-pos": "^1.0.3",
+    "photonkit": "^0.1.2",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
+    "remote": "^0.2.6"
+  },
+  "devDependencies": {
+    "electron": "^1.6.11",
+    "react-scripts": "1.0.7"
+  },
+  "main": "src/electron-run.js",
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject",
+    "electron": "electron ."
+  }
+}

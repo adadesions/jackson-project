@@ -1,0 +1,12 @@
+.img-section{
+  width: auto;
+  height: 500px;
+}
+
+.circle{
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50px;
+  background-color: red;
+}

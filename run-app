@@ -1,0 +1,3 @@
+#!/bin/bash
+yarn start &
+xterm -hold -e 'yarn run electron' 
