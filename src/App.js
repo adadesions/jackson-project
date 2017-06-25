@@ -83,8 +83,9 @@ class App extends Component {
       format: 'OFF',
       orientation: 'left',
       filename: this.state.leftImgFilename,
-      extension: this.state.extension,
+      extension: this.state.leftImgExtension,
       fullAddress: this.state.leftImg[0],
+      pairedWith: this.state.rightImgFilename + '.' + this.state.rightImgExtension,
       vertices: pointLeftStore.length, // number of points
       faces: leftDelaunay.length, // number of face ( triangle )
       vertexSet: pointLeftStore,
@@ -94,8 +95,9 @@ class App extends Component {
       format: 'OFF',
       orientation: 'right',
       filename: this.state.rightImgFilename,
-      extension: this.state.rightExtension,
+      extension: this.state.rightImgExtension,
       fullAddress: this.state.rightImg[0],
+      pairedWith: this.state.leftImgFilename + '.' + this.state.leftImgExtension,
       vertices: pointRightStore.length, // number of points
       faces: rightDelaunay.length, // number of face ( triangle )
       vertexSet: pointRightStore,
@@ -114,11 +116,12 @@ class App extends Component {
       let modifiedAddress = filename.split('.')[0];
 
       async.map([ leftOFF, rightOFF ], (obj) => {
+        let addressJSON = modifiedAddress + obj.filename + '.json';
+        let addressYAML = modifiedAddress + obj.filename + '.yaml';
+
         let jObj = stringify( obj, { space: 3, cmp: (a,b) => -1 });
         let yObj = YAML.stringify(obj)
 
-        let addressJSON = modifiedAddress + obj.filename + '.json';
-        let addressYAML = modifiedAddress + obj.filename + '.yaml';
         fs.writeFile(addressJSON, jObj, (err) => err ? console.log(err) : console.log('Saved JSON'));
         fs.writeFile(addressYAML, yObj, (err) => err ? console.log(err) : console.log('Saved YAML'));
       });
