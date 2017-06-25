@@ -1,6 +1,6 @@
 .img-section{
-  width: auto;
-  height: 500px;
+  width: 500px;
+  height: auto;
 }
 
 .circle{
@@ -9,4 +9,26 @@
   height: 8px;
   border-radius: 50px;
   background-color: red;
+}
+
+.face-canvas {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  background-color: #333;
+
+}
+
+.display-screen {
+  width: auto;
+}
+
+.line-between-screen{
+  width: 18px;
+  height: auto;
+  background-color: #333;
+}
+
+.toolbar-flex {
+  
 }

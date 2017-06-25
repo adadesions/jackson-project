@@ -7,26 +7,30 @@ import './App.css';
 // Components
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
+import DisplayScreen from './components/DisplayScreen';
 
 const { dialog } = window.require('electron').remote;
 const fs = window.require('fs');
 const YAML = require('json2yaml');
 const genCircleId = idGenerator('AD', {prefix: '_circle$'});
+const HeightToolbar = 36;
 
 
 class App extends Component {
   constructor( props ) {
     super( props );
     this.state = {
-      currentImg : '/Users/adacodeio/Desktop/facesDB/faces17.jpg',
+      leftImg : '/Users/adacodeio/Desktop/facialStereo/1L.jpg',
+      rightImg : '/Users/adacodeio/Desktop/facialStereo/1R.jpg',
       imgStack: [],
-      curPoint: {},
-      pointStore: [],
-      circleStore: [],
+      pointLeftStore: [],
+      pointRightStore: [],
+      circleLeftStore: [],
+      circleRightStore: [],
     }
   }
 
-  openFile() {
+  openFile( screenId ) {
     const dialogProp = {
       defaultPath: '~/Desktop',
       properties: ['openFile', 'openDirectory'],
@@ -43,8 +47,17 @@ class App extends Component {
       let sperateNameAndextension = nameWiteExtension.split(".");
       let onlyName = sperateNameAndextension[0];
       let onlyExtension = sperateNameAndextension[ sperateNameAndextension.length - 1 ];
+      if( screenId === 'left-screen') {
+        this.setState({
+          leftImg: filename
+        });
+      }
+      else{
+        this.setState({
+          rightImg: filename
+        });
+      }
       this.setState({
-        currentImg: filename,
         imgStack: this.state.imgStack.concat(filename),
         filename: onlyName,
         extension: onlyExtension
@@ -100,20 +113,14 @@ class App extends Component {
   }
 
   createCircle(e) {
-    let elem = document.getElementById("face-canvas");
+    let elem = document.getElementById(e.target.id);
     let canvasBounding = elem.getBoundingClientRect();
     let id = genCircleId();
     let tPoint = {
       id,
       x: Math.floor(Math.abs(e.clientX - canvasBounding.left)),
-      y: Math.floor(Math.abs(e.clientY - canvasBounding.top)),
+      y: Math.floor(Math.abs(e.clientY - canvasBounding.top - HeightToolbar)),
     };
-
-
-    this.setState({
-      curPoint: tPoint,
-      pointStore: this.state.pointStore.concat(tPoint),
-    })
 
     let style = {
       marginLeft: tPoint.x - 4, // 5 is error value for display circle at exactly pixel
@@ -128,29 +135,46 @@ class App extends Component {
       onDragEnd: (e) => this.dragEndCircle(e),
       onDoubleClick: (e) => this.deleteCircle(e),
     });
-    let circleStore = this.state.circleStore;
-    circleStore.push(circle);
 
-    this.setState({
-      circleStore
-    });
+
+    if(elem.id === 'left-screen'){
+      let circleLeftStore = this.state.circleLeftStore;
+      circleLeftStore.push(circle);
+
+      this.setState({
+        pointLeftStore: this.state.pointLeftStore.concat(tPoint),
+        circleLeftStore
+      });
+    }
+    else if(elem.id === 'right-screen'){
+      let circleRightStore = this.state.circleRightStore;
+      circleRightStore.push(circle);
+
+      this.setState({
+        pointRightStore: this.state.pointRightStore.concat(tPoint),
+        circleRightStore
+      });
+    }
   }
 
   dragEndCircle(e) {
     e.preventDefault();
-    let elem = document.getElementById("face-canvas");
+    let elem = e.target.parentElement.parentElement;
     let canvasBounding = elem.getBoundingClientRect();
     let target = document.getElementById(e.target.id);
     let error = target.clientHeight;
     let tPoint = {
       x: e.clientX - canvasBounding.left,
-      y: e.clientY - canvasBounding.top
+      y: e.clientY - canvasBounding.top - HeightToolbar
     }
-    let pointStore = this.state.pointStore;
-    let targetIndex = pointStore.findIndex( point => point.id === e.target.id );
+    // Updating a point
+    let pointStore, targetIndex;
+    pointStore = elem.id === 'left-screen' ? this.state.pointLeftStore : this.state.pointRightStore;
+    targetIndex = pointStore.findIndex( point => point.id === e.target.id );
     pointStore[targetIndex].x = tPoint.x;
     pointStore[targetIndex].y = tPoint.y;
 
+    // Display a new point on screnn
     target.style.marginLeft = Math.abs(tPoint.x) + 'px';
     target.style.marginTop = Math.abs(tPoint.y - error) + 'px';
   }
@@ -186,7 +210,7 @@ class App extends Component {
     let statusObj = {
       filename: this.state.filename,
       extension: this.state.extension,
-      numPoints: this.state.pointStore.length,
+      numPoints: this.state.pointLeftStore.length,
     };
     return (
       <div className="window">
@@ -195,18 +219,21 @@ class App extends Component {
             <Sidebar statusObj={ statusObj } />
             <div className="pane">
 
-            <Navbar />
-
-            <div id="face-canvas">
-              <div id="circle-store">
-                { this._renderCircle() }
-              </div>
-              <img
-                className="img-section"
-                src={'file://'+this.state.currentImg}
-                draggable='true'
-                onClick={ (e) => this.createCircle(e) }
-                alt='Faces'
+            <div className="face-canvas">
+              <DisplayScreen
+                id="left-screen"
+                currentImg={ this.state.leftImg }
+                circleStore={ this.state.circleLeftStore }
+                click={ (e) => this.createCircle(e) }
+                openFile={ () => this.openFile('left-screen') }
+              />
+              <div className="line-between-screen"></div>
+              <DisplayScreen
+                id="right-screen"
+                currentImg={ this.state.rightImg }
+                circleStore={ this.state.circleRightStore }
+                click={ (e) => this.createCircle(e) }
+                openFile={ () => this.openFile('right-screen') }
               />
             </div>
 
