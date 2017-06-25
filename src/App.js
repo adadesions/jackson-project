@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import stringify from 'json-stable-stringify';
 import idGenerator from 'incremental-id-generator';
-import triangulate from "delaunay-triangulate";
+import triangulate from 'delaunay-triangulate';
+import async from 'async';
 import './App.css';
 
 // Components
@@ -83,7 +84,7 @@ class App extends Component {
       orientation: 'left',
       filename: this.state.leftImgFilename,
       extension: this.state.extension,
-      fullAddress: this.state.leftImg,
+      fullAddress: this.state.leftImg[0],
       vertices: pointLeftStore.length, // number of points
       faces: leftDelaunay.length, // number of face ( triangle )
       vertexSet: pointLeftStore,
@@ -94,21 +95,15 @@ class App extends Component {
       orientation: 'right',
       filename: this.state.rightImgFilename,
       extension: this.state.rightExtension,
-      fullAddress: this.state.rightImg,
+      fullAddress: this.state.rightImg[0],
       vertices: pointRightStore.length, // number of points
       faces: rightDelaunay.length, // number of face ( triangle )
       vertexSet: pointRightStore,
       faceSet: rightDelaunay
     }
 
-    let [ leftJSON, rightJSON ] = [ leftOFF, rightOFF ].map( off => stringify(off, { space: 3, cmp: (a,b) => -1 }) );
-    let [ leftYAML, rightYAML ] = [ leftOFF, rightOFF ].map( off => YAML.stringify(off) );
-
-    console.log(leftJSON);
-    console.log(rightYAML);
-
     let saveProperites = {
-      defaultPath: leftOFF.filename + '.json',
+      defaultPath: '_',
       title: 'Save a Mesh Face',
     }
 
@@ -116,19 +111,18 @@ class App extends Component {
       if( filename === undefined ){
         return -1;
       }
-      let cutExtension = filename.split('.')[0];
+      let modifiedAddress = filename.split('.')[0];
 
-      fs.writeFile( filename, completeJSON, (err) => {
-        //JSON
-        if(err)  console.log(err);
-        console.log('Saved JSON');
+      async.map([ leftOFF, rightOFF ], (obj) => {
+        let jObj = stringify( obj, { space: 3, cmp: (a,b) => -1 });
+        let yObj = YAML.stringify(obj)
+
+        let addressJSON = modifiedAddress + obj.filename + '.json';
+        let addressYAML = modifiedAddress + obj.filename + '.yaml';
+        fs.writeFile(addressJSON, jObj, (err) => err ? console.log(err) : console.log('Saved JSON'));
+        fs.writeFile(addressYAML, yObj, (err) => err ? console.log(err) : console.log('Saved YAML'));
       });
 
-      //YAML
-      fs.writeFile( cutExtension + '.yaml', completeYAML, (err) => {
-        if(err)  console.log(err);
-        console.log('Saved YAML');
-      });
     });
 
   }
