@@ -49,19 +49,18 @@ class App extends Component {
       let onlyExtension = sperateNameAndextension[ sperateNameAndextension.length - 1 ];
       if( screenId === 'left-screen') {
         this.setState({
-          leftImg: filename
+          leftImg: filename,
+          leftImgFilename: onlyName,
+          leftImgextension: onlyExtension
         });
       }
       else{
         this.setState({
-          rightImg: filename
+          rightImg: filename,
+          rightImgFilename: onlyName,
+          rightImgextension: onlyExtension
         });
       }
-      this.setState({
-        imgStack: this.state.imgStack.concat(filename),
-        filename: onlyName,
-        extension: onlyExtension
-      });
     });
   }
 
@@ -207,16 +206,11 @@ class App extends Component {
 
   render() {
     console.log(this.state.pointStore);
-    let statusObj = {
-      filename: this.state.filename,
-      extension: this.state.extension,
-      numPoints: this.state.pointLeftStore.length,
-    };
     return (
       <div className="window">
         <div className="window-content">
           <div className="pane-group">
-            <Sidebar statusObj={ statusObj } />
+            <Sidebar statusObj={ this.state } />
             <div className="pane">
 
             <div className="face-canvas">
