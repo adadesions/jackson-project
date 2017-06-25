@@ -51,42 +51,64 @@ class App extends Component {
         this.setState({
           leftImg: filename,
           leftImgFilename: onlyName,
-          leftImgextension: onlyExtension
+          leftImgExtension: onlyExtension
         });
       }
       else{
         this.setState({
           rightImg: filename,
           rightImgFilename: onlyName,
-          rightImgextension: onlyExtension
+          rightImgExtension: onlyExtension
         });
       }
     });
   }
 
   saveToJSON() {
-    let pointStore = this.state.pointStore;
-    let pointArray = pointStore.map( (point) => {
-      point.z = 0;
-      delete point.id;
-      return [point.x , point.y];
+    let pointLeftStore = this.state.pointLeftStore;
+    let pointRightStore = this.state.pointRightStore;
+    let [ pointLeftArray, pointRightArray ] = [ pointLeftStore, pointRightStore ].map( (store) => {
+      return store.map( point => {
+        point.z = 0;
+        delete point.id;
+        return [point.x , point.y];
+      });
     });
-    let delaunay = triangulate(pointArray);
-    let filename = this.state.filename;
-    let off = {
+
+    let leftDelaunay = triangulate(pointLeftArray);
+    let rightDelaunay = triangulate(pointRightArray);
+
+    let leftOFF = {
       format: 'OFF',
-      filename,
+      orientation: 'left',
+      filename: this.state.leftImgFilename,
       extension: this.state.extension,
-      vertices: pointStore.length, // number of points
-      faces: delaunay.length, // number of face ( triangle )
-      vertexSet: pointStore,
-      faceSet: delaunay
+      fullAddress: this.state.leftImg,
+      vertices: pointLeftStore.length, // number of points
+      faces: leftDelaunay.length, // number of face ( triangle )
+      vertexSet: pointLeftStore,
+      faceSet: leftDelaunay
     }
-    let completeJSON = stringify(off, { space: 3, cmp: (a,b) => -1 });
-    let completeYAML = YAML.stringify(off);
+    let rightOFF = {
+      format: 'OFF',
+      orientation: 'right',
+      filename: this.state.rightImgFilename,
+      extension: this.state.rightExtension,
+      fullAddress: this.state.rightImg,
+      vertices: pointRightStore.length, // number of points
+      faces: rightDelaunay.length, // number of face ( triangle )
+      vertexSet: pointRightStore,
+      faceSet: rightDelaunay
+    }
+
+    let [ leftJSON, rightJSON ] = [ leftOFF, rightOFF ].map( off => stringify(off, { space: 3, cmp: (a,b) => -1 }) );
+    let [ leftYAML, rightYAML ] = [ leftOFF, rightOFF ].map( off => YAML.stringify(off) );
+
+    console.log(leftJSON);
+    console.log(rightYAML);
 
     let saveProperites = {
-      defaultPath: filename + '.json',
+      defaultPath: leftOFF.filename + '.json',
       title: 'Save a Mesh Face',
     }
 
@@ -200,11 +222,6 @@ class App extends Component {
       });
     }
 
-  }
-
-  _renderCircle() {
-    let circleStore = this.state.circleStore;
-    return circleStore.map( circle => circle );
   }
 
   clearMarkers() {

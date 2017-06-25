@@ -23,7 +23,7 @@ export default class Sidebar extends Component {
           <div className="nav-group-item">
             <span className="icon icon-newspaper"></span>
             <span>Extension : </span>
-            { this.props.statusObj.leftImgextension}
+            { this.props.statusObj.leftImgExtension}
           </div>
         </nav>
 
@@ -42,7 +42,7 @@ export default class Sidebar extends Component {
           <div className="nav-group-item">
             <span className="icon icon-newspaper"></span>
             <span>Extension : </span>
-            { this.props.statusObj.rightImgextension}
+            { this.props.statusObj.rightImgExtension}
           </div>
         </nav>
       </div>
