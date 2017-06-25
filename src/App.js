@@ -179,17 +179,27 @@ class App extends Component {
   }
 
   deleteCircle(e) {
-    let id = e.target.id;
-    let circleStore = this.state.circleStore;
-    let pointStore = this.state.pointStore;
-    let targetIndex = pointStore.findIndex( point => point.id === id);
+    let parent = e.target.parentElement.parentElement;
+    let isLeftscreen = parent.id === 'left-screen';
+    let circleStore = isLeftscreen ? this.state.circleLeftStore : this.state.circleRightStore;
+    let pointStore = isLeftscreen ? this.state.pointLeftStore : this.state.pointRightStore;
+    let targetIndex = pointStore.findIndex( point => point.id === e.target.id);
     circleStore.splice(targetIndex, 1);
     pointStore.splice(targetIndex, 1);
 
-    this.setState({
-      pointStore,
-      circleStore
-    });
+    if( isLeftscreen ){
+      this.setState({
+        pointLeftStore: pointStore,
+        circleLeftStore: circleStore
+      });
+    }
+    else{
+      this.setState({
+        pointRightStore: pointStore,
+        circleRightStore: circleStore
+      });
+    }
+
   }
 
   _renderCircle() {
