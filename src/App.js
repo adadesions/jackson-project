@@ -6,7 +6,6 @@ import async from 'async';
 import './App.css';
 
 // Components
-import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
 import DisplayScreen from './components/DisplayScreen';
 
@@ -221,53 +220,71 @@ class App extends Component {
 
   }
 
-  clearMarkers() {
-    this.setState({
-      pointStore: [],
-      circleStore: [],
-    });
+  clearMarkers(screenId) {
+    if( screenId === 'left-screen'){
+      this.setState({
+        pointLeftStore: [],
+        circleLeftStore: [],
+      });
+    }
+    else if( screenId === 'right-screen' ){
+      this.setState({
+        pointRightStore: [],
+        circleRightStore: [],
+      });
+    }
+    else{
+      this.setState({
+        pointLeftStore: [],
+        pointRightStore: [],
+        circleLeftStore: [],
+        circleRightStore: [],
+      });
+    }
   }
 
   render() {
-    console.log(this.state.pointStore);
     return (
       <div className="window">
         <div className="window-content">
           <div className="pane-group">
             <Sidebar statusObj={ this.state } />
             <div className="pane">
-
-            <div className="face-canvas">
-              <DisplayScreen
-                id="left-screen"
-                currentImg={ this.state.leftImg }
-                circleStore={ this.state.circleLeftStore }
-                click={ (e) => this.createCircle(e) }
-                openFile={ () => this.openFile('left-screen') }
-              />
-              <div className="line-between-screen"></div>
-              <DisplayScreen
-                id="right-screen"
-                currentImg={ this.state.rightImg }
-                circleStore={ this.state.circleRightStore }
-                click={ (e) => this.createCircle(e) }
-                openFile={ () => this.openFile('right-screen') }
-              />
-            </div>
-
+              {/*  Workingspace */}
+              <div className="face-canvas">
+                <DisplayScreen
+                  id="left-screen"
+                  currentImg={ this.state.leftImg }
+                  circleStore={ this.state.circleLeftStore }
+                  click={ (e) => this.createCircle(e) }
+                  openFile={ () => this.openFile('left-screen') }
+                  fullAddress= { this.state.leftImg[0] }
+                  clearMarkers= { () => this.clearMarkers('left-screen') }
+                />
+                <div className="line-between-screen"></div>
+                <DisplayScreen
+                  id="right-screen"
+                  currentImg={ this.state.rightImg }
+                  circleStore={ this.state.circleRightStore }
+                  click={ (e) => this.createCircle(e) }
+                  openFile={ () => this.openFile('right-screen') }
+                  fullAddress= { this.state.rightImg[0] }
+                  clearMarkers= { () => this.clearMarkers('right-screen') }
+                />
+              </div>
+              {/*  End Workingspace */}
           </div>
         </div>
+      </div>
 
       {/*  Footer */}
-      </div>
       <footer className="toolbar toolbar-footer">
         <div className="toolbar-actions">
           <button
             className="btn btn-danger"
             onClick={ () => this.clearMarkers() }>
-            Clear Markers
+            Clear All Markers
           </button>
-
           <button
             className="btn btn-primary pull-right"
             onClick={ () => this.saveToJSON() }>
@@ -275,6 +292,8 @@ class App extends Component {
           </button>
         </div>
       </footer>
+      {/*  End Footer */}
+
     </div>
     );
   }

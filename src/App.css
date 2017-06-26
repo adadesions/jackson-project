@@ -23,12 +23,22 @@
   width: auto;
 }
 
-.line-between-screen{
+.line-between-screen {
   width: 18px;
   height: auto;
   background-color: #333;
 }
 
 .toolbar-flex {
-  
+  display: flex;
+  justify-content: space-between;
+}
+
+.openFileBtn {
+  color: #FFF;
+}
+
+.full-address {
+  flex-grow: 2;
+  margin-left: 1em;
 }
