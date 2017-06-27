@@ -47,18 +47,19 @@ class App extends Component {
       let sperateNameAndextension = nameWiteExtension.split(".");
       let onlyName = sperateNameAndextension[0];
       let onlyExtension = sperateNameAndextension[ sperateNameAndextension.length - 1 ];
+
       if( screenId === 'left-screen') {
         this.setState({
           leftImg: filename,
           leftImgFilename: onlyName,
-          leftImgExtension: onlyExtension
+          leftImgExtension: onlyExtension,
         });
       }
       else{
         this.setState({
           rightImg: filename,
           rightImgFilename: onlyName,
-          rightImgExtension: onlyExtension
+          rightImgExtension: onlyExtension,
         });
       }
     });
@@ -88,7 +89,8 @@ class App extends Component {
       vertices: pointLeftStore.length, // number of points
       faces: leftDelaunay.length, // number of face ( triangle )
       vertexSet: pointLeftStore,
-      faceSet: leftDelaunay
+      faceSet: leftDelaunay,
+      data: this.state.leftImgData
     }
     let rightOFF = {
       format: 'OFF',
@@ -100,7 +102,8 @@ class App extends Component {
       vertices: pointRightStore.length, // number of points
       faces: rightDelaunay.length, // number of face ( triangle )
       vertexSet: pointRightStore,
-      faceSet: rightDelaunay
+      faceSet: rightDelaunay,
+      data: this.state.rightImgData
     }
 
     let saveProperites = {
