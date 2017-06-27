@@ -1,24 +1,51 @@
 import React, { Component } from 'react';
 
 export default class DisplayScreen extends Component {
+  constructor(props) {
+    super(props);
+  }
 
   _renderCircle() {
     return this.props.pointStore.map( point => {
       return (
         <circle
-          key= { point.id }
+          key= { point.id  }
           id = { point.id }
           cx= { point.x }
           cy= { point.y }
           r= "5"
           strokeWidth= "0"
-          fill= { point.draggable ? 'yellow' : 'red' }          
+          fill= { point.draggable ? 'yellow' : 'red' }
           onClick= { (e) => this.props.onClick(e) }
           onMouseMove= { (e) => this.props.onMove(e) }
           onDoubleClick= { (e) => this.props.onDoubleClick(e) }
         />
       );
     });
+  }
+
+  _renderDelaunay() {
+    let delaunayStore = this.calDelaunay() || [];    
+    return (
+      delaunayStore.length > 0 &&
+      <polyline
+        points={ delaunayStore.map( t => t.map( p => [ p.x, p.y ]))}
+        stroke="blue"
+        strokeWidth="1"
+        fill='transparent'>
+      </polyline>
+    );
+  }
+
+  calDelaunay() {
+    let deStore = this.props.delaunay || [];
+    let pointStore = this.props.pointStore;
+    let readyStore = deStore.map( de => {
+      let tempStore = de.map( i => pointStore[i]);
+      tempStore.push( pointStore[ de[0] ] );
+      return tempStore;
+    });
+    return readyStore;
   }
 
   render() {
@@ -53,6 +80,7 @@ export default class DisplayScreen extends Component {
           onClick={ (e) => this.props.click(e) }
           width='300px' height='300px'
         />
+        { this._renderDelaunay() }
         { this._renderCircle() }
       </svg>
     </div>

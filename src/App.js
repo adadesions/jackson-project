@@ -130,6 +130,25 @@ class App extends Component {
 
   }
 
+  updateDelaunay() {
+    let pointLeftStore = this.state.pointLeftStore;
+    let pointRightStore = this.state.pointRightStore;
+    let [ pointLeftArray, pointRightArray ] = [ pointLeftStore, pointRightStore ].map( (store) => {
+      return store.map( point => {
+        point.z = 0;
+        // delete point.id;
+        return [point.x , point.y];
+      });
+    });
+
+    let leftDelaunay = triangulate(pointLeftArray);
+    let rightDelaunay = triangulate(pointRightArray);
+    this.setState({
+      leftDelaunay,
+      rightDelaunay
+    });
+  }
+
   createCircle(e) {
     let elem = document.getElementById(e.target.id).parentElement;
     let canvasBounding = elem.getBoundingClientRect();
@@ -151,6 +170,7 @@ class App extends Component {
         pointRightStore: this.state.pointRightStore.concat(tPoint),
       });
     }
+    this.updateDelaunay();
   }
 
   dragCircle(e) {
@@ -204,6 +224,7 @@ class App extends Component {
         pointRightStore: pointStore
       });
     }
+    this.updateDelaunay();
   }
 
   deleteCircle(e) {
@@ -224,7 +245,7 @@ class App extends Component {
         pointRightStore: pointStore,
       });
     }
-
+    this.updateDelaunay();
   }
 
   clearMarkers(screenId) {
@@ -232,20 +253,21 @@ class App extends Component {
       this.setState({
         pointLeftStore: [],
         circleLeftStore: [],
+        leftDelaunay: [],
       });
     }
     else if( screenId === 'right-screen' ){
       this.setState({
         pointRightStore: [],
-        circleRightStore: [],
+        rightDelaunay: []
       });
     }
     else{
       this.setState({
         pointLeftStore: [],
         pointRightStore: [],
-        circleLeftStore: [],
-        circleRightStore: [],
+        leftDelaunay: [],
+        rightDelaunay: []
       });
     }
   }
@@ -266,9 +288,10 @@ class App extends Component {
                   click={ (e) => this.createCircle(e) }
                   openFile={ () => this.openFile('left-screen') }
                   fullAddress= { this.state.leftImg[0] }
+                  delaunay= { this.state.leftDelaunay }
                   clearMarkers= { () => this.clearMarkers('left-screen') }
                   onMove= { (e) => this.moveCircle(e) }
-                  onClick= { (e) => this.dragCircle(e) }
+                  onClick= { (e) =>  this.dragCircle(e) }
                   onDoubleClick= { (e) => this.deleteCircle(e) }
                 />
                 <div className="line-between-screen"></div>
@@ -279,6 +302,7 @@ class App extends Component {
                   click={ (e) => this.createCircle(e) }
                   openFile={ () => this.openFile('right-screen') }
                   fullAddress= { this.state.rightImg[0] }
+                  delaunay= { this.state.rightDelaunay }
                   clearMarkers= { () => this.clearMarkers('right-screen') }
                   onMove= { (e) => this.moveCircle(e) }
                   onClick= { (e) => this.dragCircle(e) }
