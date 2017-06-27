@@ -13,8 +13,6 @@ const { dialog } = window.require('electron').remote;
 const fs = window.require('fs');
 const YAML = require('json2yaml');
 const genCircleId = idGenerator('AD', {prefix: '_circle$'});
-const HeightToolbar = 36;
-
 
 class App extends Component {
   constructor( props ) {
@@ -133,91 +131,97 @@ class App extends Component {
   }
 
   createCircle(e) {
-    let elem = document.getElementById(e.target.id);
+    let elem = document.getElementById(e.target.id).parentElement;
     let canvasBounding = elem.getBoundingClientRect();
     let id = genCircleId();
     let tPoint = {
       id,
       x: Math.floor(Math.abs(e.clientX - canvasBounding.left)),
-      y: Math.floor(Math.abs(e.clientY - canvasBounding.top - HeightToolbar)),
+      y: Math.floor(Math.abs(e.clientY - canvasBounding.top)),
+      draggable: false
     };
 
-    let style = {
-      marginLeft: tPoint.x - 4, // 5 is error value for display circle at exactly pixel
-      marginTop: tPoint.y - 4,  // calculate from circle.height/2 and circle.width/2
-    }
-    let circle = React.createElement('div', {
-      id,
-      style,
-      className: 'circle',
-      key: id,
-      draggable: true,
-      onDragEnd: (e) => this.dragEndCircle(e),
-      onDoubleClick: (e) => this.deleteCircle(e),
-    });
-
-
     if(elem.id === 'left-screen'){
-      let circleLeftStore = this.state.circleLeftStore;
-      circleLeftStore.push(circle);
-
       this.setState({
         pointLeftStore: this.state.pointLeftStore.concat(tPoint),
-        circleLeftStore
       });
     }
     else if(elem.id === 'right-screen'){
-      let circleRightStore = this.state.circleRightStore;
-      circleRightStore.push(circle);
-
       this.setState({
         pointRightStore: this.state.pointRightStore.concat(tPoint),
-        circleRightStore
       });
     }
   }
 
-  dragEndCircle(e) {
+  dragCircle(e) {
+    let pointStore, targetIndex;
+    let elem = e.target.parentElement;
+    let isLeftscreen = elem.id === 'left-screen';
+    pointStore = isLeftscreen ? this.state.pointLeftStore : this.state.pointRightStore;
+    targetIndex = pointStore.findIndex( point => point.id === e.target.id );
+    pointStore[targetIndex].draggable = !pointStore[targetIndex].draggable;
+    if( isLeftscreen ){
+      this.setState({
+        pointLeftStore: pointStore
+      });
+    }
+    else{
+      this.setState({
+        pointRightStore: pointStore
+      });
+    }
+  }
+
+  moveCircle(e) {
     e.preventDefault();
-    let elem = e.target.parentElement.parentElement;
+    let elem = e.target.parentElement;
+    let pointStore, targetIndex;
+    let isLeftscreen = elem.id === 'left-screen';
+
+    pointStore = isLeftscreen ? this.state.pointLeftStore : this.state.pointRightStore;
+    targetIndex = pointStore.findIndex( point => point.id === e.target.id );
+    let draggable = pointStore[targetIndex].draggable;
+
+    if( !draggable ){
+      return -1;
+    }
+
     let canvasBounding = elem.getBoundingClientRect();
-    let target = document.getElementById(e.target.id);
-    let error = target.clientHeight;
     let tPoint = {
       x: e.clientX - canvasBounding.left,
-      y: e.clientY - canvasBounding.top - HeightToolbar
+      y: e.clientY - canvasBounding.top
     }
-    // Updating a point
-    let pointStore, targetIndex;
-    pointStore = elem.id === 'left-screen' ? this.state.pointLeftStore : this.state.pointRightStore;
-    targetIndex = pointStore.findIndex( point => point.id === e.target.id );
     pointStore[targetIndex].x = tPoint.x;
     pointStore[targetIndex].y = tPoint.y;
 
-    // Display a new point on screnn
-    target.style.marginLeft = Math.abs(tPoint.x) + 'px';
-    target.style.marginTop = Math.abs(tPoint.y - error) + 'px';
+    if( isLeftscreen ){
+      this.setState({
+        pointLeftStore: pointStore
+      });
+    }
+    else{
+      this.setState({
+        pointRightStore: pointStore
+      });
+    }
   }
 
   deleteCircle(e) {
-    let parent = e.target.parentElement.parentElement;
+    let parent = e.target.parentElement;
     let isLeftscreen = parent.id === 'left-screen';
-    let circleStore = isLeftscreen ? this.state.circleLeftStore : this.state.circleRightStore;
     let pointStore = isLeftscreen ? this.state.pointLeftStore : this.state.pointRightStore;
     let targetIndex = pointStore.findIndex( point => point.id === e.target.id);
-    circleStore.splice(targetIndex, 1);
     pointStore.splice(targetIndex, 1);
+    console.log(parent)
 
     if( isLeftscreen ){
       this.setState({
         pointLeftStore: pointStore,
-        circleLeftStore: circleStore
       });
     }
     else{
       this.setState({
         pointRightStore: pointStore,
-        circleRightStore: circleStore
       });
     }
 
@@ -258,21 +262,27 @@ class App extends Component {
                 <DisplayScreen
                   id="left-screen"
                   currentImg={ this.state.leftImg }
-                  circleStore={ this.state.circleLeftStore }
+                  pointStore={ this.state.pointLeftStore }
                   click={ (e) => this.createCircle(e) }
                   openFile={ () => this.openFile('left-screen') }
                   fullAddress= { this.state.leftImg[0] }
                   clearMarkers= { () => this.clearMarkers('left-screen') }
+                  onMove= { (e) => this.moveCircle(e) }
+                  onClick= { (e) => this.dragCircle(e) }
+                  onDoubleClick= { (e) => this.deleteCircle(e) }
                 />
                 <div className="line-between-screen"></div>
                 <DisplayScreen
                   id="right-screen"
                   currentImg={ this.state.rightImg }
-                  circleStore={ this.state.circleRightStore }
+                  pointStore={ this.state.pointRightStore }
                   click={ (e) => this.createCircle(e) }
                   openFile={ () => this.openFile('right-screen') }
                   fullAddress= { this.state.rightImg[0] }
                   clearMarkers= { () => this.clearMarkers('right-screen') }
+                  onMove= { (e) => this.moveCircle(e) }
+                  onClick= { (e) => this.dragCircle(e) }
+                  onDoubleClick= { (e) => this.deleteCircle(e) }
                 />
               </div>
               {/*  End Workingspace */}

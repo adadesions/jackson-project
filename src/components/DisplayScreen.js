@@ -3,7 +3,22 @@ import React, { Component } from 'react';
 export default class DisplayScreen extends Component {
 
   _renderCircle() {
-    return this.props.circleStore.map( c => c );
+    return this.props.pointStore.map( point => {
+      return (
+        <circle
+          key= { point.id }
+          id = { point.id }
+          cx= { point.x }
+          cy= { point.y }
+          r= "5"
+          strokeWidth= "0"
+          fill= { point.draggable ? 'yellow' : 'red' }          
+          onClick= { (e) => this.props.onClick(e) }
+          onMouseMove= { (e) => this.props.onMove(e) }
+          onDoubleClick= { (e) => this.props.onDoubleClick(e) }
+        />
+      );
+    });
   }
 
   render() {
@@ -27,18 +42,25 @@ export default class DisplayScreen extends Component {
         </div>
       </header>
 
-      <div id="circle-store">
+      <svg id={ this.props.id } className="screen-svg" style={ screenSvg } draggable="true">
+
+        <image
+          id={ this.props.id + '-image'}
+          className="img-section"
+          href={'file://'+this.props.currentImg}
+          draggable='true'
+          alt='Faces'
+          onClick={ (e) => this.props.click(e) }
+          width='300px' height='300px'
+        />
         { this._renderCircle() }
-      </div>
-      <img
-        id={ this.props.id }
-        className="img-section"
-        src={'file://'+this.props.currentImg}
-        draggable='true'
-        alt='Faces'
-        onClick={ (e) => this.props.click(e) }
-      />
+      </svg>
     </div>
     );
   }
+}
+
+const screenSvg = {
+  height: '500px',
+  width: '450px'
 }
