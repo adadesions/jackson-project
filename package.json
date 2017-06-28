@@ -1,10 +1,13 @@
 {
-  "name": "jackson-project",
+  "name": "jacksonproject",
   "version": "0.1.0",
+  "description": "Jackson training dataset program",
+  "author": "Ada Kaminkure <adadesions@gmail.com>",
   "private": true,
   "dependencies": {
     "bootstrap": "^3.3.7",
     "delaunay-triangulate": "^1.1.6",
+    "electron-is-dev": "^0.1.2",
     "electron-save-file": "^1.0.2",
     "incremental-id-generator": "^0.1.0",
     "jquery": "^3.2.1",
@@ -17,15 +20,65 @@
     "remote": "^0.2.6"
   },
   "devDependencies": {
+    "concurrently": "^3.5.0",
     "electron": "^1.6.11",
-    "react-scripts": "1.0.7"
+    "electron-builder": "^19.8.0",
+    "react-scripts": "1.0.7",
+    "wait-on": "^2.0.2"
   },
-  "main": "src/electron-run.js",
+  "main": "public/electron.js",
   "scripts": {
+    "postinstall": "install-app-deps",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "electron": "electron ."
+    "preelectron-pack": "yarn build",
+    "electron": "electron .",
+    "electron-dev": "concurrently \"BROWSER=none yarn start\" \"wait-on http://localhost:3000 && electron .\"",
+    "electron-pack": "build --em.main=build/electron.js",
+    "pack": "build --dir",
+    "dist": "build"
+  },
+  "homepage": "./",
+  "build": {
+    "appId": "org.jackson.jackson-project",
+    "files": [
+      "build/**/*",
+      "node_modules/**/*"
+    ],
+    "directories": {
+      "buildResources": "assets"
+    },
+    "mac": {
+      "category": "public.app-category.productivity"
+    },
+    "dmg": {
+      "background": "assets/background.png",
+      "icon": "assets/icon.icns",
+      "iconSize": 128,
+      "contents": [
+        {
+          "x": 110,
+          "y": 150
+        },
+        {
+          "x": 440,
+          "y": 150,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ]
+    },
+    "win": {
+      "target": "NSIS",
+      "icon": "assets/icon.ico"
+    }
   }
 }
