@@ -68,8 +68,7 @@ class App extends Component {
     let pointRightStore = this.state.pointRightStore;
     let [ pointLeftArray, pointRightArray ] = [ pointLeftStore, pointRightStore ].map( (store) => {
       return store.map( point => {
-        point.z = 0;
-        delete point.id;
+        point.z = 0;        
         return [point.x , point.y];
       });
     });
