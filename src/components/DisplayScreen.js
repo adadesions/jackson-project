@@ -25,7 +25,7 @@ export default class DisplayScreen extends Component {
   }
 
   _renderDelaunay() {
-    let delaunayStore = this.calDelaunay() || [];    
+    let delaunayStore = this.calDelaunay() || [];
     return (
       delaunayStore.length > 0 &&
       <polyline
@@ -74,7 +74,8 @@ export default class DisplayScreen extends Component {
         <image
           id={ this.props.id + '-image'}
           className="img-section"
-          href={'file://'+this.props.currentImg}
+          href={this.props.currentImg}
+          // 'file://'+this.props.currentImg
           draggable='true'
           alt='Faces'
           onClick={ (e) => this.props.click(e) }

@@ -18,8 +18,8 @@ class App extends Component {
   constructor( props ) {
     super( props );
     this.state = {
-      leftImg : '/Users/adacodeio/Desktop/facialStereo/1L.jpg',
-      rightImg : '/Users/adacodeio/Desktop/facialStereo/1R.jpg',
+      leftImg : '/monaLisa.jpg',
+      rightImg : '/monaLisa.jpg',
       imgStack: [],
       pointLeftStore: [],
       pointRightStore: [],
@@ -45,6 +45,7 @@ class App extends Component {
       let sperateNameAndextension = nameWiteExtension.split(".");
       let onlyName = sperateNameAndextension[0];
       let onlyExtension = sperateNameAndextension[ sperateNameAndextension.length - 1 ];
+      filename = 'file://'+filename;
 
       if( screenId === 'left-screen') {
         this.setState({
@@ -68,7 +69,7 @@ class App extends Component {
     let pointRightStore = this.state.pointRightStore;
     let [ pointLeftArray, pointRightArray ] = [ pointLeftStore, pointRightStore ].map( (store) => {
       return store.map( point => {
-        point.z = 0;        
+        point.z = 0;
         return [point.x , point.y];
       });
     });
@@ -286,7 +287,7 @@ class App extends Component {
                   pointStore={ this.state.pointLeftStore }
                   click={ (e) => this.createCircle(e) }
                   openFile={ () => this.openFile('left-screen') }
-                  fullAddress= { this.state.leftImg[0] }
+                  fullAddress= { this.state.leftImg }
                   delaunay= { this.state.leftDelaunay }
                   clearMarkers= { () => this.clearMarkers('left-screen') }
                   onMove= { (e) => this.moveCircle(e) }
@@ -300,7 +301,7 @@ class App extends Component {
                   pointStore={ this.state.pointRightStore }
                   click={ (e) => this.createCircle(e) }
                   openFile={ () => this.openFile('right-screen') }
-                  fullAddress= { this.state.rightImg[0] }
+                  fullAddress= { this.state.rightImg }
                   delaunay= { this.state.rightDelaunay }
                   clearMarkers= { () => this.clearMarkers('right-screen') }
                   onMove= { (e) => this.moveCircle(e) }
