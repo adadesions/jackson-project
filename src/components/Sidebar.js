@@ -43,19 +43,19 @@ export default class Sidebar extends Component {
         </nav>
 
         <nav className="nav-group">
-          <h5 className="nav-group-title">Circle radius</h5>
+          <h5 className="nav-group-title">Circle radius : { this.props.statusObj.circleRadius }</h5>
           <div className="nav-group-item">
             <input
               id="circle-radius"
               type="range"
-              min ="1"
-              max="5"
-              step ="0.5"              
+              min ="3"
+              max="9"
+              step ="0.5"
+              defaultValue="5"
+              onChange={ (e) => this.props.changeRadius(e.target.value) }
             />
           </div>
         </nav>
-
-
       </div>
     );
   }

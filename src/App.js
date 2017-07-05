@@ -231,7 +231,7 @@ class App extends Component {
     let isLeftscreen = parent.id === 'left-screen';
     let pointStore = isLeftscreen ? this.state.pointLeftStore : this.state.pointRightStore;
     let targetIndex = pointStore.findIndex( point => point.id === e.target.id);
-    pointStore.splice(targetIndex, 1);    
+    pointStore.splice(targetIndex, 1);
 
     if( isLeftscreen ){
       this.setState({
@@ -270,12 +270,18 @@ class App extends Component {
     }
   }
 
+  changeRadius(radius) {
+    this.setState({
+      circleRadius: radius
+    });
+  }
+
   render() {
     return (
       <div className="window">
         <div className="window-content">
           <div className="pane-group">
-            <Sidebar statusObj={ this.state } />
+            <Sidebar statusObj={ this.state } changeRadius={ this.changeRadius.bind(this) } />
             <div className="pane">
               {/*  Workingspace */}
               <div className="face-canvas">
@@ -288,6 +294,7 @@ class App extends Component {
                   fullAddress= { this.state.leftImg }
                   delaunay= { this.state.leftDelaunay }
                   clearMarkers= { () => this.clearMarkers('left-screen') }
+                  circleRadius={ this.state.circleRadius }
                   onMove= { (e) => this.moveCircle(e) }
                   onClick= { (e) =>  this.dragCircle(e) }
                   onDoubleClick= { (e) => this.deleteCircle(e) }
@@ -302,6 +309,7 @@ class App extends Component {
                   fullAddress= { this.state.rightImg }
                   delaunay= { this.state.rightDelaunay }
                   clearMarkers= { () => this.clearMarkers('right-screen') }
+                  circleRadius={ this.state.circleRadius }
                   onMove= { (e) => this.moveCircle(e) }
                   onClick= { (e) => this.dragCircle(e) }
                   onDoubleClick= { (e) => this.deleteCircle(e) }
@@ -328,7 +336,6 @@ class App extends Component {
         </div>
       </footer>
       {/*  End Footer */}
-
     </div>
     );
   }

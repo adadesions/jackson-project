@@ -9,7 +9,7 @@ export default class DisplayScreen extends Component {
           id = { point.id }
           cx= { point.x }
           cy= { point.y }
-          r= "5"
+          r= { this.props.circleRadius }
           strokeWidth= "0"
           fill= { point.draggable ? 'yellow' : 'red' }
           onClick= { (e) => this.props.onClick(e) }
@@ -66,12 +66,10 @@ export default class DisplayScreen extends Component {
       </header>
 
       <svg id={ this.props.id } className="screen-svg" style={ screenSvg } draggable="true">
-
         <image
           id={ this.props.id + '-image'}
           className="img-section"
           href={this.props.currentImg}
-          // 'file://'+this.props.currentImg
           draggable='true'
           alt='Faces'
           onClick={ (e) => this.props.click(e) }
