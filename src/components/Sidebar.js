@@ -41,6 +41,21 @@ export default class Sidebar extends Component {
             { this.props.statusObj.rightImgExtension}
           </div>
         </nav>
+
+        <nav className="nav-group">
+          <h5 className="nav-group-title">Circle radius</h5>
+          <div className="nav-group-item">
+            <input
+              id="circle-radius"
+              type="range"
+              min ="1"
+              max="5"
+              step ="0.5"              
+            />
+          </div>
+        </nav>
+
+
       </div>
     );
   }

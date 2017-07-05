@@ -25,6 +25,7 @@ class App extends Component {
       pointRightStore: [],
       circleLeftStore: [],
       circleRightStore: [],
+      circleRadius: 5,
     }
   }
 
@@ -125,9 +126,7 @@ class App extends Component {
         fs.writeFile(addressJSON, jObj, (err) => err ? console.log(err) : console.log('Saved JSON'));
         fs.writeFile(addressYAML, yObj, (err) => err ? console.log(err) : console.log('Saved YAML'));
       });
-
     });
-
   }
 
   updateDelaunay() {
@@ -232,8 +231,7 @@ class App extends Component {
     let isLeftscreen = parent.id === 'left-screen';
     let pointStore = isLeftscreen ? this.state.pointLeftStore : this.state.pointRightStore;
     let targetIndex = pointStore.findIndex( point => point.id === e.target.id);
-    pointStore.splice(targetIndex, 1);
-    console.log(parent)
+    pointStore.splice(targetIndex, 1);    
 
     if( isLeftscreen ){
       this.setState({
