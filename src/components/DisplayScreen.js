@@ -1,10 +1,6 @@
 import React, { Component } from 'react';
 
 export default class DisplayScreen extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   _renderCircle() {
     return this.props.pointStore.map( point => {
       return (
