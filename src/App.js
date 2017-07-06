@@ -13,7 +13,6 @@ import Footer from './components/Footer';
 const { dialog } = window.require('electron').remote;
 const fs = window.require('fs');
 const YAML = require('json2yaml');
-const genCircleId = idGenerator('AD', {prefix: '_circle$'});
 
 class App extends Component {
   constructor( props ) {
@@ -151,7 +150,7 @@ class App extends Component {
   createCircle(e) {
     let elem = document.getElementById(e.target.id).parentElement;
     let canvasBounding = elem.getBoundingClientRect();
-    let id = genCircleId();
+    let id = ( Math.random() + 1).toString(36).substr(2, 8);
     let tPoint = {
       id,
       x: Math.floor(Math.abs(e.clientX - canvasBounding.left)),
