@@ -56,7 +56,34 @@ export default class Sidebar extends Component {
             />
           </div>
         </nav>
+
+        <nav className="nav-group">
+          <h5 className="nav-group-title"> Mesh </h5>
+          <div className="nav-group-item">
+            <button
+              className="btn btn-default"
+              style={ style.openMeshBtn }
+              onClick={ () => this.props.openMesh() }
+            >
+              <span className="icon icon-eye" style={ style.icon }></span>
+              Open Mesh
+            </button>
+          </div>
+        </nav>
       </div>
     );
   }
 }
+
+const style = {
+  center: {
+    textAlign: 'center',
+  },
+  openMeshBtn: {
+    width: '100%',
+    height: 'auto'
+  },
+  icon: {
+    paddingTop: '2px'
+  }
+};

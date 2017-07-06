@@ -19,9 +19,9 @@ export default class DisplayScreen extends Component {
       );
     });
   }
-
+  
   _renderDelaunay() {
-    let delaunayStore = this.calDelaunay() || [];
+    let delaunayStore = this.calDelaunay();
     return (
       delaunayStore.length > 0 &&
       <polyline
@@ -41,6 +41,7 @@ export default class DisplayScreen extends Component {
       tempStore.push( pointStore[ de[0] ] );
       return tempStore;
     });
+
     return readyStore;
   }
 
@@ -65,7 +66,7 @@ export default class DisplayScreen extends Component {
         </div>
       </header>
 
-      <svg id={ this.props.id } className="screen-svg" style={ screenSvg } draggable="true">
+      <svg id={ this.props.id } className="screen-svg" style={ style.screenSvg } draggable="true">
         <image
           id={ this.props.id + '-image'}
           className="img-section"
@@ -83,7 +84,9 @@ export default class DisplayScreen extends Component {
   }
 }
 
-const screenSvg = {
-  height: '500px',
-  width: '450px'
+const style = {
+  screenSvg: {
+    height: '500px',
+    width: '450px'
+  }
 }

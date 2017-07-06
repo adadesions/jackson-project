@@ -26,7 +26,7 @@ class App extends Component {
       pointRightStore: [],
       circleLeftStore: [],
       circleRightStore: [],
-      circleRadius: 5,
+      circleRadius: 4,
     }
   }
 
@@ -84,7 +84,7 @@ class App extends Component {
       orientation: 'left',
       filename: this.state.leftImgFilename,
       extension: this.state.leftImgExtension,
-      fullAddress: this.state.leftImg[0],
+      fullAddress: this.state.leftImg,
       pairedWith: this.state.rightImgFilename + '.' + this.state.rightImgExtension,
       vertices: pointLeftStore.length, // number of points
       faces: leftDelaunay.length, // number of face ( triangle )
@@ -97,7 +97,7 @@ class App extends Component {
       orientation: 'right',
       filename: this.state.rightImgFilename,
       extension: this.state.rightImgExtension,
-      fullAddress: this.state.rightImg[0],
+      fullAddress: this.state.rightImg,
       pairedWith: this.state.leftImgFilename + '.' + this.state.leftImgExtension,
       vertices: pointRightStore.length, // number of points
       faces: rightDelaunay.length, // number of face ( triangle )
@@ -108,7 +108,7 @@ class App extends Component {
 
     let saveProperites = {
       defaultPath: '_',
-      title: 'Save a Mesh Face',
+      title: 'Save Mesh Faces',
     }
 
     dialog.showSaveDialog(saveProperites, (filename) => {
@@ -136,7 +136,6 @@ class App extends Component {
     let [ pointLeftArray, pointRightArray ] = [ pointLeftStore, pointRightStore ].map( (store) => {
       return store.map( point => {
         point.z = 0;
-        // delete point.id;
         return [point.x , point.y];
       });
     });
@@ -277,12 +276,40 @@ class App extends Component {
     });
   }
 
+  openMesh() {
+    const dialogProp = {
+      defaultPath: '~/Desktop',
+      properties: ['openFile', 'openDirectory'],
+      filters: [
+        {name: 'Images', extensions: ['json', 'yaml', 'yml']},
+      ],
+    };
+    dialog.showOpenDialog( dialogProp, (filename) => {
+      if( filename === undefined){
+        return -1;
+      }
+      let json = JSON.parse(fs.readFileSync( filename[0] , 'utf8'));
+      let verticesObj = json.vertexSet;
+      let verticesArr = verticesObj.map( (obj) => [ obj.x , obj.y ] );
+      let leftDelaunay = triangulate(verticesArr);
+
+      this.setState({
+        leftDelaunay,
+        pointLeftStore: verticesObj,
+      });
+    });
+  }
+
   render() {
     return (
       <div className="window">
         <div className="window-content">
           <div className="pane-group">
-            <Sidebar statusObj={ this.state } changeRadius={ this.changeRadius.bind(this) } />
+            <Sidebar
+              statusObj={ this.state }
+              changeRadius={ this.changeRadius.bind(this) }
+              openMesh={ this.openMesh.bind(this) }
+            />
             <div className="pane">
               {/*  Workingspace */}
               <div className="face-canvas">
