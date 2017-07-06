@@ -8,6 +8,7 @@ import './App.css';
 // Components
 import Sidebar from './components/Sidebar';
 import DisplayScreen from './components/DisplayScreen';
+import Footer from './components/Footer';
 
 const { dialog } = window.require('electron').remote;
 const fs = window.require('fs');
@@ -321,20 +322,10 @@ class App extends Component {
       </div>
 
       {/*  Footer */}
-      <footer className="toolbar toolbar-footer">
-        <div className="toolbar-actions">
-          <button
-            className="btn btn-danger"
-            onClick={ () => this.clearMarkers() }>
-            Clear All Markers
-          </button>
-          <button
-            className="btn btn-primary pull-right"
-            onClick={ () => this.saveToJSON() }>
-            Save
-          </button>
-        </div>
-      </footer>
+      <Footer
+        clearMarkers={ this.clearMarkers.bind(this) }
+        saveToJSON={ this.saveToJSON.bind(this) }
+       />
       {/*  End Footer */}
     </div>
     );
