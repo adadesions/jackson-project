@@ -200,7 +200,7 @@ class App extends Component {
     this.updateDelaunay();
   }
 
-  dragCircle(e) {
+  dragStartCircle(e) {
     let pointStore, targetIndex;
     let elem = e.target.parentElement;
     let isLeftscreen = elem.id === 'left-screen';
@@ -370,7 +370,7 @@ class App extends Component {
                   clearMarkers= { () => this.clearMarkers('left-screen') }
                   circleRadius={ this.state.circleRadius }
                   onMove= { (e) => this.moveCircle(e) }
-                  onClick= { (e) =>  this.dragCircle(e) }
+                  onClick= { (e) =>  this.dragStartCircle(e) }
                   onDoubleClick= { (e) => this.deleteCircle(e) }
                 />
                 <div className="line-between-screen"></div>
@@ -385,7 +385,7 @@ class App extends Component {
                   clearMarkers= { () => this.clearMarkers('right-screen') }
                   circleRadius={ this.state.circleRadius }
                   onMove= { (e) => this.moveCircle(e) }
-                  onClick= { (e) => this.dragCircle(e) }
+                  onClick= { (e) => this.dragStartCircle(e) }
                   onDoubleClick= { (e) => this.deleteCircle(e) }
                 />
               </div>
