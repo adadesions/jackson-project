@@ -207,14 +207,24 @@ class App extends Component {
     pointStore = isLeftscreen ? this.state.pointLeftStore : this.state.pointRightStore;
     targetIndex = pointStore.findIndex( point => point.id === e.target.id );
     pointStore[targetIndex].draggable = !pointStore[targetIndex].draggable;
+    let x = pointStore[targetIndex].x;
+    let y = pointStore[targetIndex].y;
     if( isLeftscreen ){
       this.setState({
-        pointLeftStore: pointStore
+        pointLeftStore: pointStore,
+        logging: this.state.logging.concat({
+          date: new Date().toLocaleString(),
+          log: `Marker(${x}, ${y}) at leftscreen, draggable = ${pointStore[targetIndex].draggable}`
+        })
       });
     }
     else{
       this.setState({
-        pointRightStore: pointStore
+        pointRightStore: pointStore,
+        logging: this.state.logging.concat({
+          date: new Date().toLocaleString(),
+          log: `Marker(${x}, ${y}) at rightscreen, draggable = ${pointStore[targetIndex].draggable}`
+        })
       });
     }
   }
