@@ -324,6 +324,10 @@ class App extends Component {
       this.setState({
         leftDelaunay,
         pointLeftStore: verticesObj,
+        logging: this.state.logging.concat({
+          date: new Date().toLocaleString(),
+          log: `Open mesh template from ${filename}`
+        })
       });
     });
   }
