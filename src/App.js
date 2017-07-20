@@ -329,9 +329,13 @@ class App extends Component {
   }
 
   showLogging() {
-    return this.state.logging.map( logObj => {
+    let elem = document.getElementById("logging");
+    if( elem ){
+      elem.scrollTop = elem.scrollHeight;
+    }
+    return this.state.logging.map( (logObj, index) => {
       return (
-        <p key={logObj.date}>
+        <p key={index}>
           <b>[{logObj.date}]</b> - {logObj.log}
         </p>
       );
@@ -382,7 +386,7 @@ class App extends Component {
                 />
               </div>
               {/*  End Workingspace */}
-              <div className="logging">
+              <div id="logging">
                 { this.showLogging() }
               </div>
           </div>
