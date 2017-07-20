@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import stringify from 'json-stable-stringify';
-import idGenerator from 'incremental-id-generator';
 import triangulate from 'delaunay-triangulate';
 import async from 'async';
 import './App.css';
@@ -26,6 +25,10 @@ class App extends Component {
       circleLeftStore: [],
       circleRightStore: [],
       circleRadius: 4,
+      logging: [{
+        date: new Date().toLocaleString(),
+        log: "Hello! Welcome to Jackson Project by Development team"
+      }]
     }
   }
 
@@ -41,6 +44,7 @@ class App extends Component {
       if( filename === undefined){
         return -1;
       }
+
       let substr = filename[0].split("/");
       let nameWiteExtension = substr[substr.length-1];
       let sperateNameAndextension = nameWiteExtension.split(".");
@@ -53,6 +57,10 @@ class App extends Component {
           leftImg: filename,
           leftImgFilename: onlyName,
           leftImgExtension: onlyExtension,
+          logging: this.state.logging.concat({
+            date: new Date().toLocaleString(),
+            log: `Open file at leftscreen, ${filename}`
+          })
         });
       }
       else{
@@ -60,6 +68,10 @@ class App extends Component {
           rightImg: filename,
           rightImgFilename: onlyName,
           rightImgExtension: onlyExtension,
+          logging: this.state.logging.concat({
+            date: new Date().toLocaleString(),
+            log: `Open file at rightscreen, ${filename}`
+          })
         });
       }
     });
@@ -106,7 +118,7 @@ class App extends Component {
     }
 
     let saveProperites = {
-      defaultPath: '_',
+      defaultPath: ' ',
       title: 'Save Mesh Faces',
     }
 
@@ -125,6 +137,12 @@ class App extends Component {
 
         fs.writeFile(addressJSON, jObj, (err) => err ? console.log(err) : console.log('Saved JSON'));
         fs.writeFile(addressYAML, yObj, (err) => err ? console.log(err) : console.log('Saved YAML'));
+        this.setState({
+          logging: this.state.logging.concat({
+            date: new Date().toLocaleString(),
+            log: `Saved JSON and YAML at ${filename}`
+          })
+        });
       });
     });
   }
@@ -159,13 +177,24 @@ class App extends Component {
     };
 
     if(elem.id === 'left-screen'){
+      let cpTPoint = JSON.parse(JSON.stringify(tPoint));;
+      cpTPoint.id = ( Math.random() + 2).toString(36).substr(2, 8);
       this.setState({
         pointLeftStore: this.state.pointLeftStore.concat(tPoint),
+        // pointRightStore: this.state.pointRightStore.concat(cpTPoint),
+        logging: this.state.logging.concat({
+          date: new Date().toLocaleString(),
+          log: `Created new marker at (${tPoint.x}, ${tPoint.y}) on leftscreen`
+        })
       });
     }
     else if(elem.id === 'right-screen'){
       this.setState({
         pointRightStore: this.state.pointRightStore.concat(tPoint),
+        logging: this.state.logging.concat({
+          date: new Date().toLocaleString(),
+          log: `Created new marker at (${tPoint.x}, ${tPoint.y}) on rightscreen`
+        })
       });
     }
     this.updateDelaunay();
@@ -206,8 +235,8 @@ class App extends Component {
 
     let canvasBounding = elem.getBoundingClientRect();
     let tPoint = {
-      x: e.clientX - canvasBounding.left,
-      y: e.clientY - canvasBounding.top
+      x: e.clientX*0.9999 - canvasBounding.left,
+      y: e.clientY*0.9999 - canvasBounding.top
     }
     pointStore[targetIndex].x = tPoint.x;
     pointStore[targetIndex].y = tPoint.y;
@@ -299,6 +328,16 @@ class App extends Component {
     });
   }
 
+  showLogging() {
+    return this.state.logging.map( logObj => {
+      return (
+        <p key={logObj.date}>
+          <b>[{logObj.date}]</b> - {logObj.log}
+        </p>
+      );
+    });
+  }
+
   render() {
     return (
       <div className="window">
@@ -343,6 +382,9 @@ class App extends Component {
                 />
               </div>
               {/*  End Workingspace */}
+              <div className="logging">
+                { this.showLogging() }
+              </div>
           </div>
         </div>
       </div>

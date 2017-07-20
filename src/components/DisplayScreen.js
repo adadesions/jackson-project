@@ -9,7 +9,7 @@ export default class DisplayScreen extends Component {
           id = { point.id }
           cx= { point.x }
           cy= { point.y }
-          r= { this.props.circleRadius }
+          r= { point.draggable ? this.props.circleRadius*3 : this.props.circleRadius }
           strokeWidth= "0"
           fill= { point.draggable ? 'yellow' : 'red' }
           onClick= { (e) => this.props.onClick(e) }
@@ -19,7 +19,7 @@ export default class DisplayScreen extends Component {
       );
     });
   }
-  
+
   _renderDelaunay() {
     let delaunayStore = this.calDelaunay();
     return (

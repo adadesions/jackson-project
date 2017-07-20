@@ -42,3 +42,15 @@
   flex-grow: 2;
   margin-left: 1em;
 }
+
+.logging {
+  width: 100;
+  height: 11em;
+  overflow-y: auto;
+}
+
+.logging p{
+  color: #333;
+  margin-left: 1em;
+  margin-top: 0.5em;
+}
