@@ -44,13 +44,16 @@
 }
 
 #logging {
-  width: 100;
-  height: 11em;
+  width: auto;
+  height: 22%;
   overflow-y: auto;
+  border: 5px solid #555F61;
+  background-color: #222;
 }
 
 #logging p{
-  color: #333;
+  color: #669933;
   margin-left: 1em;
-  margin-top: 0.5em;
+  margin-top: 10px;
+  line-height: 4px;
 }

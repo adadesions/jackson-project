@@ -345,8 +345,10 @@ class App extends Component {
   showLogging() {
     let elem = document.getElementById("logging");
     if( elem ){
+      elem.scrollIntoView(false);
       elem.scrollTop = elem.scrollHeight;
     }
+
     return this.state.logging.map( (logObj, index) => {
       return (
         <p key={index}>
