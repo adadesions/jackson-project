@@ -290,12 +290,20 @@ class App extends Component {
         pointLeftStore: [],
         circleLeftStore: [],
         leftDelaunay: [],
+        logging: this.state.logging.concat({
+          date: new Date().toLocaleString(),
+          log: `Remove all makers at Left screen`
+        })
       });
     }
     else if( screenId === 'right-screen' ){
       this.setState({
         pointRightStore: [],
-        rightDelaunay: []
+        rightDelaunay: [],
+        logging: this.state.logging.concat({
+          date: new Date().toLocaleString(),
+          log: `Remove all makers at Right screen`
+        })
       });
     }
     else{
@@ -303,14 +311,22 @@ class App extends Component {
         pointLeftStore: [],
         pointRightStore: [],
         leftDelaunay: [],
-        rightDelaunay: []
+        rightDelaunay: [],
+        logging: this.state.logging.concat({
+          date: new Date().toLocaleString(),
+          log: `Remove all makers at both screens`
+        })
       });
     }
   }
 
   changeRadius(radius) {
     this.setState({
-      circleRadius: radius
+      circleRadius: radius,
+      logging: this.state.logging.concat({
+        date: new Date().toLocaleString(),
+        log: `Change marker radius to ${radius}`
+      })
     });
   }
 
