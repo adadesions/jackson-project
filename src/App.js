@@ -47,9 +47,9 @@ class App extends Component {
 
       let substr = filename[0].split("/");
       let nameWiteExtension = substr[substr.length-1];
-      let sperateNameAndextension = nameWiteExtension.split(".");
-      let onlyName = sperateNameAndextension[0];
-      let onlyExtension = sperateNameAndextension[ sperateNameAndextension.length - 1 ];
+      let sperateNameAndExtension = nameWiteExtension.split(".");
+      let onlyName = sperateNameAndExtension[0];
+      let onlyExtension = sperateNameAndExtension[ sperateNameAndExtension.length - 1 ];
       filename = 'file://'+filename;
 
       if( screenId === 'left-screen') {
