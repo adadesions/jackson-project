@@ -2,6 +2,11 @@
 #include "opencv2/opencv.hpp"
 
 namespace js {
+  // struct toMouseData {
+  //   cv::Mat leftImg,
+  //   cv::Mat rightImg,
+  // };
+
   void MouseCallBack(int event, int x, int y, int flags, void *param){
     cv::Mat *source = (cv::Mat*)param;
     cv::Mat img = source->clone();
