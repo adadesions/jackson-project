@@ -82,4 +82,8 @@ typings/
 # dotenv environment variables file
 .env
 
+# CMake, c++
+/lib/build
+/lib/CMakeFiles
+
 >>>>>>> cb234e960778bc8ad6e8afb6edfc6a08b0391c9f
